@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - WRIS Wallet{% endblock %}
+
+{% block content %}
+<div class="nav">
+    <a href="#" class="nav-link active" onclick="showSection('accounts')">Accounts</a>
+    <a href="#" class="nav-link" onclick="showSection('transactions')">Transactions</a>
+    <a href="#" class="nav-link" onclick="showSection('dapps')">DApps</a>
+    <a href="#" class="nav-link" onclick="showSection('settings')">Settings</a>
+</div>
+
+<section id="accountsSection">
+    <h2 class="glitter-text">Your Accounts</h2>
+    <div class="dashboard" id="accountsList"></div>
+</section>
+
+<section id="transactionsSection" style="display: none;">
+    <h2 class="glitter-text">Transaction History</h2>
+    <div id="transactionsList" class="card"></div>
+</section>
+
+<section id="dappsSection" style="display: none;">
+    <h2 class="glitter-text">DApps Browser</h2>
+    <div id="dappsList" class="dashboard"></div>
+</section>
+
+<section id="settingsSection" style="display: none;">
+    <h2 class="glitter-text">Settings</h2>
+    <div class="card">
+        <p>Settings coming soon...</p>
+    </div>
+</section>
+
+<script>
+function showSection(section) {
+    document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    
+    if (section === 'accounts') {
+        document.getElementById('accountsSection').style.display = 'block';
+        loadAccounts();
+    } else if (section === 'transactions') {
+        document.getElementById('transactionsSection').style.display = 'block';
+        loadTransactions();
+    } else if (section === 'dapps') {
+        document.getElementById('dappsSection').style.display = 'block';
+        loadDapps();
+    } else if (section === 'settings') {
+        document.getElementById('settingsSection').style.display = 'block';
+    }
+    
+    event.target.classList.add('active');
+}
+
+async function loadAccounts() {
+    try {
+        const response = await fetch('/api/accounts/');
+        const accounts = await response.json();
+        
+        let html = '';
+        accounts.forEach(account => {
+            html += `
+                <div class="balance-card">
+                    <h3>${account.account_name}</h3>
+                    <p>${account.blockchain.toUpperCase()}</p>
+                    <p style="font-family: monospace; font-size: 0.9rem; word-break: break-all;">${account.address}</p>
+                </div>
+            `;
+        });
+        
+        if (!html) {
+            html = '<p>No accounts found. Create a new wallet first.</p>';
+        }
+        
+        document.getElementById('accountsList').innerHTML = html;
+    } catch (error) {
+        console.error('Error loading accounts:', error);
+    }
+}
+
+async function loadTransactions() {
+    try {
+        const response = await fetch('/api/transactions/');
+        const transactions = await response.json();
+        
+        let html = '';
+        if (transactions.length === 0) {
+            html = '<p>No transactions yet.</p>';
+        } else {
+            transactions.forEach(tx => {
+                html += `
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <p class="transaction-type">${tx.status.toUpperCase()}</p>
+                            <p class="transaction-address">${tx.tx_hash}</p>
+                        </div>
+                        <p class="transaction-amount ${tx.from_address === 'received' ? 'received' : 'sent'}">${tx.amount}</p>
+                    </div>
+                `;
+            });
+        }
+        
+        document.getElementById('transactionsList').innerHTML = html;
+    } catch (error) {
+        console.error('Error loading transactions:', error);
+    }
+}
+
+async function loadDapps() {
+    const dapps = [
+        { name: 'Uniswap', description: 'Decentralized exchange', icon: '🔄' },
+        { name: 'Aave', description: 'Lending protocol', icon: '💰' },
+        { name: 'OpenSea', description: 'NFT Marketplace', icon: '🖼️' },
+        { name: 'Raydium', description: 'Solana AMM', icon: '☀️' }
+    ];
+    
+    let html = '';
+    dapps.forEach(dapp => {
+        html += `
+            <div class="card">
+                <h3>${dapp.icon} ${dapp.name}</h3>
+                <p>${dapp.description}</p>
+                <button class="button">Connect</button>
+            </div>
+        `;
+    });
+    
+    document.getElementById('dappsList').innerHTML = html;
+}
+
+// Load accounts on page load
+loadAccounts();
+</script>
+{% endblock %}

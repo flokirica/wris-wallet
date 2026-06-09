@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Create Wallet - WRIS Wallet{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="glitter-text">Create New Wallet</h2>
+    
+    <form id="createWalletForm" onsubmit="handleCreateWallet(event)">
+        <div class="form-group">
+            <label for="walletName">Wallet Name</label>
+            <input type="text" id="walletName" name="walletName" placeholder="My Awesome Wallet" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password (for encryption)</label>
+            <input type="password" id="password" name="password" placeholder="Enter a strong password" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+        </div>
+        
+        <button type="submit" class="button">Create Wallet</button>
+    </form>
+    
+    <div id="seedPhraseContainer" style="display: none; margin-top: 2rem;">
+        <div class="alert alert-info">
+            ⚠️ Save your seed phrase in a secure location. It's the only way to recover your wallet!
+        </div>
+        
+        <div class="card" style="background: #EDE9FE; border: 2px solid #8B5CF6;">
+            <h3>Your Seed Phrase:</h3>
+            <p id="seedPhraseDisplay" style="font-family: monospace; font-size: 1.1rem; padding: 1rem; background: white; border-radius: 8px; word-break: break-all;"></p>
+            <button onclick="copySeedPhrase()" class="button" style="margin-top: 1rem;">📋 Copy to Clipboard</button>
+        </div>
+        
+        <a href="/dashboard" class="button" style="margin-top: 1rem; text-decoration: none; display: inline-block;">Go to Dashboard</a>
+    </div>
+</div>
+
+<script>
+async function handleCreateWallet(event) {
+    event.preventDefault();
+    
+    const walletName = document.getElementById('walletName').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    if (password !== confirmPassword) {
+        app.showAlert('Passwords do not match!', 'danger');
+        return;
+    }
+    
+    const result = await app.createWallet(walletName, password);
+    
+    if (result && result.seed_phrase) {
+        document.getElementById('seedPhraseDisplay').textContent = result.seed_phrase;
+        document.getElementById('createWalletForm').style.display = 'none';
+        document.getElementById('seedPhraseContainer').style.display = 'block';
+    }
+}
+
+function copySeedPhrase() {
+    const seedPhrase = document.getElementById('seedPhraseDisplay').textContent;
+    navigator.clipboard.writeText(seedPhrase).then(() => {
+        app.showAlert('Seed phrase copied to clipboard!', 'success');
+    });
+}
+</script>
+{% endblock %}

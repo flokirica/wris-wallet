@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}WRIS Wallet - Home{% endblock %}
+
+{% block content %}
+<div class="card" style="text-align: center; padding: 3rem;">
+    <h2 class="glitter-text">Welcome to WRIS Wallet</h2>
+    <p style="font-size: 1.2rem; margin: 1.5rem 0; color: #6B7280;">
+        Secure multichain cryptocurrency wallet with support for Ethereum, BSC, Polygon, Solana, and Bitcoin
+    </p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+        <a href="/create" class="button" style="text-decoration: none; display: inline-block;">
+            ✨ Create New Wallet
+        </a>
+        <a href="/import" class="button button-secondary" style="text-decoration: none; display: inline-block;">
+            📥 Import Wallet
+        </a>
+        <a href="/dashboard" class="button" style="text-decoration: none; display: inline-block;">
+            📊 Dashboard
+        </a>
+    </div>
+    
+    <div style="margin-top: 3rem; text-align: left;">
+        <h3>Features ✨</h3>
+        <ul style="list-style: none; padding: 0;">
+            <li>✅ Multi-chain support (Ethereum, BSC, Polygon, Solana, Bitcoin)</li>
+            <li>✅ Create new wallets easily</li>
+            <li>✅ Import existing wallets</li>
+            <li>✅ Secure seed phrase storage</li>
+            <li>✅ Multiple accounts management</li>
+            <li>✅ Real-time balance tracking</li>
+            <li>✅ Transaction history</li>
+            <li>✅ DApps browser</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

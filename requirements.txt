@@ -1,0 +1,36 @@
+Flask==2.3.0
+Flask-CORS==4.0.0
+Flask-SQLAlchemy==3.0.5
+Flask-Migrate==4.0.4
+Werkzeug==2.3.0
+
+# Blockchain
+web3==6.8.0
+solders==0.18.0
+solana==0.28.1
+bitcoinlib==0.6.13
+
+# Cryptography
+cryptography==41.0.0
+PyNaCl==1.5.0
+bip-utils==2.10.0
+ecdsa==0.18.0
+mnemonic==0.20
+
+# Database
+SQLAlchemy==2.0.0
+
+# Utilities
+requests==2.31.0
+python-dotenv==1.0.0
+pydantic==2.0.0
+
+# Security
+PyJWT==2.8.0
+bcrypt==4.0.1
+
+# Development
+pytest==7.4.0
+pytest-cov==4.1.0
+black==23.0.0
+flake8==6.0.0

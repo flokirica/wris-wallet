@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Import Wallet - WRIS Wallet{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="glitter-text">Import Wallet</h2>
+    
+    <form id="importWalletForm" onsubmit="handleImportWallet(event)">
+        <div class="form-group">
+            <label for="seedPhrase">Seed Phrase (12 or 24 words)</label>
+            <textarea id="seedPhrase" name="seedPhrase" placeholder="Enter your seed phrase here..." rows="4" required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="importWalletName">Wallet Name</label>
+            <input type="text" id="importWalletName" name="importWalletName" placeholder="My Imported Wallet" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="importPassword">Password (for encryption)</label>
+            <input type="password" id="importPassword" name="importPassword" placeholder="Enter a strong password" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="importConfirmPassword">Confirm Password</label>
+            <input type="password" id="importConfirmPassword" name="importConfirmPassword" placeholder="Confirm your password" required>
+        </div>
+        
+        <button type="submit" class="button">Import Wallet</button>
+    </form>
+</div>
+
+<script>
+async function handleImportWallet(event) {
+    event.preventDefault();
+    
+    const seedPhrase = document.getElementById('seedPhrase').value.trim();
+    const walletName = document.getElementById('importWalletName').value;
+    const password = document.getElementById('importPassword').value;
+    const confirmPassword = document.getElementById('importConfirmPassword').value;
+    
+    if (password !== confirmPassword) {
+        app.showAlert('Passwords do not match!', 'danger');
+        return;
+    }
+    
+    const result = await app.importWallet(seedPhrase, walletName, password);
+    
+    if (result) {
+        setTimeout(() => {
+            window.location.href = '/dashboard';
+        }, 1500);
+    }
+}
+</script>
+{% endblock %}

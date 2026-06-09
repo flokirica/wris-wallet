@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions - WRIS Wallet{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="glitter-text">Transaction History</h2>
+    
+    <div id="transactionsList"></div>
+</div>
+
+<script>
+async function loadTransactionHistory() {
+    try {
+        const response = await fetch('/api/transactions/');
+        const transactions = await response.json();
+        
+        let html = '';
+        if (transactions.length === 0) {
+            html = '<p>No transactions yet.</p>';
+        } else {
+            transactions.forEach(tx => {
+                html += `
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <p class="transaction-type">${tx.status}</p>
+                            <p class="transaction-address">From: ${tx.from_address}</p>
+                            <p class="transaction-address">To: ${tx.to_address}</p>
+                        </div>
+                        <div>
+                            <p class="transaction-amount">${tx.amount} ${tx.blockchain.toUpperCase()}</p>
+                            <p style="font-size: 0.9rem; color: #6B7280;">${new Date(tx.timestamp).toLocaleString()}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        document.getElementById('transactionsList').innerHTML = html;
+    } catch (error) {
+        console.error('Error loading transactions:', error);
+    }
+}
+
+loadTransactionHistory();
+</script>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Accounts - WRIS Wallet{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="glitter-text">Manage Accounts</h2>
+    
+    <div class="dashboard" id="accountsList"></div>
+</div>
+
+<script>
+async function loadAccountsList() {
+    try {
+        const response = await fetch('/api/accounts/');
+        const accounts = await response.json();
+        
+        let html = '';
+        accounts.forEach(account => {
+            html += `
+                <div class="card">
+                    <h3>${account.account_name}</h3>
+                    <span class="badge">${account.blockchain.toUpperCase()}</span>
+                    <p style="margin-top: 1rem; font-family: monospace; font-size: 0.85rem; word-break: break-all;">${account.address}</p>
+                    <button class="button" style="margin-top: 1rem;">View Details</button>
+                </div>
+            `;
+        });
+        
+        if (!html) {
+            html = '<p>No accounts found.</p>';
+        }
+        
+        document.getElementById('accountsList').innerHTML = html;
+    } catch (error) {
+        console.error('Error loading accounts:', error);
+    }
+}
+
+loadAccountsList();
+</script>
+{% endblock %}

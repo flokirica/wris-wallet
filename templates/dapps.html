@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}DApps - WRIS Wallet{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="glitter-text">DApps Browser</h2>
+    
+    <div class="dashboard" id="dappsList"></div>
+</div>
+
+<script>
+const popularDapps = [
+    { name: 'Uniswap', description: 'Decentralized exchange on Ethereum', icon: '🔄', url: 'https://uniswap.org', blockchain: 'ethereum' },
+    { name: 'Aave', description: 'Lending protocol', icon: '💰', url: 'https://aave.com', blockchain: 'ethereum' },
+    { name: 'OpenSea', description: 'NFT Marketplace', icon: '🖼️', url: 'https://opensea.io', blockchain: 'ethereum' },
+    { name: 'Raydium', description: 'Solana AMM', icon: '☀️', url: 'https://raydium.io', blockchain: 'solana' },
+    { name: 'PancakeSwap', description: 'BSC DEX', icon: '🥞', url: 'https://pancakeswap.finance', blockchain: 'bsc' },
+    { name: 'Curve', description: 'Stablecoin DEX', icon: '📈', url: 'https://curve.fi', blockchain: 'ethereum' }
+];
+
+function loadDappsList() {
+    let html = '';
+    popularDapps.forEach(dapp => {
+        html += `
+            <div class="card">
+                <h3>${dapp.icon} ${dapp.name}</h3>
+                <p>${dapp.description}</p>
+                <span class="badge">${dapp.blockchain.toUpperCase()}</span>
+                <a href="${dapp.url}" target="_blank" class="button" style="margin-top: 1rem; text-decoration: none; display: inline-block;">Open DApp</a>
+            </div>
+        `;
+    });
+    
+    document.getElementById('dappsList').innerHTML = html;
+}
+
+loadDappsList();
+</script>
+{% endblock %}
